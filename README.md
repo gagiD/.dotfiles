@@ -1,4 +1,4 @@
-git clone --bare https://github.com/gagiD/dotfiles.git $HOME/.dotfiles
+git clone --bare https://github.com/gagiD/.dotfiles.git $HOME/.dotfiles
 
 dotfiles checkout
 
