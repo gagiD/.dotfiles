@@ -1,10 +1,10 @@
 #!/bin/sh
 # Profile file. Runs on login.
 
-export PATH="$PATH:$(du "$HOME/bin/" | cut -f2 | tr '\n' ':'):~/.gem/ruby/2.6.0/bin"
+export PATH="${PATH}:/home/gagi/bin:/home/gagi/.gem/ruby/2.7.0/bin:/usr/lib/jvm/default/bin:/home/gagi/.yarn/bin"
 
 export EDITOR="emacs"
-export TERMINAL="urxvt"
+export TERMINAL="konsole"
 export BROWSER="firefox"
 export READER="zathura"
 export FILE="ranger"
@@ -32,3 +32,7 @@ alias l='ll -A'
 alias r='ranger'
 
 alias dotfiles='/usr/bin/git --git-dir=/home/gagi/.dotfiles/ --work-tree=/home/gagi'
+
+
+# disable fucking telemetry
+export DOTNET_CLI_TELEMETRY_OPTOUT=1

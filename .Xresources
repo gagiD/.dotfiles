@@ -22,10 +22,10 @@ URxvt.imLocale: en_US.UTF-8
 
 ! URXVT FONTS
 !------------------------------------------------
-URxvt.font:xft:UbuntuMono NF:size=16
-URxvt.boldFont:xft:UbuntuMono NF:bold:size=16
-URxvt.italicfont:xft:UbuntuMono NF:italic:size=16
-URxvt.bolditalicFont:xft:UbuntuMono NF:bold:italic:size=16
+URxvt.font: xft:MesloLGM Nerd Font Mono:size=12
+URxvt.boldFont: xft:MesloLGM Nerd Font Mono:bold:size=12
+URxvt.italicfont: xft:MesloLGM Nerd Font Mono:italic:size=12
+URxvt.bolditalicFont: xft:MesloLGM Nerd Font Mono:bold:italic:size=12
 URxvt*letterSpace: -1
 URxvt*allow_bold: true
 
@@ -125,18 +125,4 @@ URxvt.keysym.M-C-w: perl:clipboard:paste_escaped
 
 URxvt.depth: 32
 URxvt.background: [100]#151515
-
-
-
-!====================================================
-!                    Emacs
-!====================================================
-Emacs.menuBar: 0
-Emacs.toolBar: 0
-Emacs.verticalScrollBars: off
-! Font settings
-Emacs*FontBackend: xft
-Emacs*Font: Ubuntu Mono:22
-! transparency 0-100
-Emacs.alpha: 99
 

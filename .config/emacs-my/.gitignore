@@ -3,8 +3,13 @@ elpa/
 irony/
 emojis/
 auto-save-list/
+semanticdb/
 
 %backup%~
 MyInit.el
 projectile-bookmarks.eld
 recentf
+
+tramp
+*session*
+
