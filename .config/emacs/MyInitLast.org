@@ -1,0 +1,762 @@
+#+STARTUP: overview
+#+TITLE: gagiD Emacs
+#+CREATOR: gagiD
+#+LANGUAGE: en
+#+OPTIONS: num:nil
+
+* General
+** Packages
+
+#+BEGIN_SRC emacs-lisp
+  (setq use-package-always-ensure t)
+
+  (use-package auto-compile
+    :config (auto-compile-on-load-mode))
+
+  (setq load-prefer-newer t)
+#+END_SRC
+
+** Change some defaults
+#+BEGIN_SRC emacs-lisp
+  (fset 'yes-or-no-p 'y-or-n-p) ; simpler
+
+  (delete-selection-mode t) ; delete selection
+  (transient-mark-mode t)   ; delete selection on type?
+
+  (setq global-auto-revert-non-file-buffers t)
+  (global-auto-revert-mode 1) ; reload buffer
+
+  (setq ring-bell-function 'ignore) ; people say this is anoying
+  (setq visible-bell t)
+
+  (setq save-interprogram-paste-before-kill t)
+
+  (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+        url-history-file (expand-file-name "url/history" user-emacs-directory))
+
+    ;; Keep customization settings in a temporary file (thanks Ambrevar!)
+  (setq custom-file
+        (if (boundp 'server-socket-dir)
+            (expand-file-name "custom.el" server-socket-dir)
+          (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+  (load custom-file t)
+
+
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(global-prettify-symbols-mode t)
+#+END_SRC
+
+** Config edit/reload
+
+#+BEGIN_SRC emacs-lisp
+  (defun visit-config ()
+    (interactive)
+    (find-file (expand-file-name "~/.config/emacs/MyInit.org" )))
+
+  (global-set-key (kbd "C-c e") 'visit-config)
+
+  (defun visit-init ()
+      (interactive)
+      (find-file (expand-file-name "~/.config/emacs/init.el" user-emacs-directory)))
+
+  (global-set-key (kbd "C-c i") 'visit-init)
+
+  (defun reload-config ()
+    (interactive)
+    (org-babel-load-file (expand-file-name "~/.config/emacs/MyInit.org" user-emacs-directory)))
+
+  (global-set-key (kbd "C-c r") 'reload-config)
+#+END_SRC
+
+** UTF-8
+#+BEGIN_SRC emacs-lisp
+  (set-charset-priority 'unicode)
+  (setq locale-coding-system   'utf-8)
+  (set-terminal-coding-system  'utf-8)
+  (set-keyboard-coding-system  'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system        'utf-8)
+  (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+#+END_SRC
+
+** Author info
+#+BEGIN_SRC emacs-lisp
+  (setq user-full-name "gagiD"
+        user-mail-address "eldin.gagulic@gmail.com"
+        calendar-latitude 40.00
+        calendar-longitude -105.16
+        calendar-location-name "BiH")
+#+END_SRC
+
+** Help
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config (which-key-setup-side-window-right)
+    :bind ("C-h C-k" . which-key-show-top-level))
+
+  (use-package discover-my-major
+    :commands (discover-my-major discover-my-mode)
+    :bind ("C-h C-m" . discover-my-major))
+#+END_SRC
+
+** Editing
+#+BEGIN_SRC emacs-lisp
+    (use-package expand-region
+      :bind ("C-c m" . er/expand-region))
+
+  (use-package origami
+    :hook (prog-mode . origami-mode)
+    :bind ("C-c f" . origami-toggle-node))
+
+    (use-package smartparens-config
+      :ensure smartparens
+      :config (show-smartparens-global-mode t))
+
+    (add-hook 'prog-mode-hook #'smartparens-mode)
+    (add-hook 'markdown-mode-hook #'smartparens-mode)
+    (add-hook 'text-mode-hook #'smartparens-mode)
+    (add-hook 'yaml-mode-hook #'smartparens-mode)
+
+
+
+    (defun kill-whole-word ()
+      (interactive)
+      (backward-word)
+      (kill-word 1))
+
+    (global-set-key (kbd "C-c w k") 'kill-whole-word)
+
+
+
+    (defun copy-whole-word ()
+      (interactive)
+      (save-excursion
+        (forward-char 1)
+        (backward-word)
+        (kill-word 1)
+        (yank)))
+
+    (global-set-key (kbd "C-c w c") 'copy-whole-word)
+
+
+
+    (global-set-key (kbd "C-c l k") 'kill-whole-line)
+
+
+
+    (defun copy-whole-line ()
+      (interactive)
+      (save-excursion
+        (kill-new
+         (buffer-substring
+          (point-at-bol)
+          (point-at-eol)))))
+
+    (global-set-key (kbd "C-c l c") 'copy-whole-line)
+
+
+
+    (use-package sudo-edit
+      :bind ("C-c s e" . sudo-edit))
+
+
+
+    (setq kill-ring-max 128)
+
+
+
+    (use-package popup-kill-ring
+      :bind ("M-y" . popup-kill-ring))
+
+    (use-package zzz-to-char
+      :bind ("M-z" . zzz-up-to-char))
+#+END_SRC
+
+** Backups
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+
+  (setq create-lockfiles nil)
+#+END_SRC
+
+** Scroll
+#+BEGIN_SRC emacs-lisp
+  (setq scroll-conservatively 10000)
+
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+  (setq scroll-step 1) ;; keyboard scroll one line at a time
+#+END_SRC
+
+** Buffers
+#+BEGIN_SRC emacs-lisp
+  (defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+  (global-set-key (kbd "C-x K") 'kill-other-buffers)
+
+  (defun kill-all-buffers ()
+    "Kill all buffers."
+    (interactive)
+    (mapc 'kill-buffer (buffer-list)))
+
+  (global-set-key (kbd "C-M-K") 'kill-other-buffers)
+
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+END_SRC
+
+** Counsel
+#+BEGIN_SRC emacs-lisp
+      (use-package counsel
+        :bind
+        ("M-x" . counsel-M-x)
+        ("C-x C-m" . counsel-M-x)
+        ("C-x C-f" . counsel-find-file)
+        ("C-x c k" . counsel-yank-pop)
+         ("C-M-l" . counsel-imenu)
+         :config
+  (setq ivy-initial-inputs-alist nil))
+#+END_SRC
+
+** Avy
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :bind ("M-s" . avy-goto-char))
+#+END_SRC
+
+** Swiper
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :bind ("C-s" . swiper))
+#+END_SRC
+
+** Ivy
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :bind
+    ("C-x C-r" . ivy-resume)
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
+#+END_SRC
+
+** Dashboard
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+    (setq dashboard-center-content t)
+    (setq dashboard-items '((projects . 10)
+                            (recents  . 5))))
+    (setq dashboard-set-init-info t)
+    (setq dashboard-set-navigator t)
+    (setq dashboard-set-heading-icons t)
+    (setq dashboard-set-file-icons t)
+#+END_SRC
+
+** Dired
+#+BEGIN_SRC emacs-lisp
+
+  (use-package all-the-icons-dired)
+    (use-package async
+      :init (dired-async-mode 1))
+
+
+#+END_SRC
+
+* Look
+** Interface
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-message t)
+
+  (set-frame-font "FiraCode Nerd Font Mono-14")
+  (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font Mono-14" ))
+  (set-face-attribute 'default t :font "FiraCode Nerd Font Mono-14" )
+
+  (tool-bar-mode   -1)
+  (menu-bar-mode   -1)
+  (scroll-bar-mode -1)
+
+  (setq sentence-end-double-space nil)
+
+  (set-fringe-mode 10)
+#+END_SRC
+
+** Line numbers, highlight
+#+BEGIN_SRC emacs-lisp
+  (column-number-mode)
+
+  ;; Enable line numbers for some modes
+  (dolist (mode '(text-mode-hook
+                  prog-mode-hook
+                  conf-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 1))))
+
+  ;; Override some modes which derive from the above
+  (dolist (mode '(org-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+    (use-package beacon
+      :config (beacon-mode 1))
+#+END_SRC
+
+** Themes
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-themes
+    :config
+    (load-theme 'doom-one t)
+
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+
+    ;; or for treemacs users
+    (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+    (doom-themes-treemacs-config)
+
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+#+END_SRC
+
+** Modeline
+
+#+BEGIN_SRC emacs-lisp
+
+
+    (use-package doom-modeline
+      :ensure t
+      :hook (after-init . doom-modeline-mode))
+      ;:custom
+;    (doom-modeline-bar-width 6)
+ ;     (doom-modeline-minor-modes nil)
+  ;      (doom-modeline-github nil)
+;  (doom-modeline-mu4e nil)
+ ; (doom-modeline-irc nil)
+;  (doom-modeline-persp-name nil))
+
+;  (use-package diminish)
+
+;      (use-package minions
+;        :config
+;  (setq minions-mode-line-lighter ""
+;        minions-mode-line-delimiters '("" . ""))
+;  (minions-mode 1))
+#+END_SRC
+
+** Unicode
+#+BEGIN_SRC emacs-lisp
+  (set-charset-priority 'unicode)
+  (setq locale-coding-system   'utf-8)
+  (set-terminal-coding-system  'utf-8)
+  (set-keyboard-coding-system  'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system        'utf-8)
+  (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+#+END_SRC
+
+** Emoji :D
+#+BEGIN_SRC emacs-lisp
+  (use-package emojify
+    :config (add-hook 'after-init-hook #'global-emojify-mode))
+#+END_SRC
+
+** Rainbow
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+    :init (add-hook 'prog-mode-hook 'rainbow-mode)
+          (add-hook 'text-mode-hook 'rainbow-mode)
+          (add-hook 'conf-mode-hook 'rainbow-mode))
+
+  (use-package rainbow-delimiters
+    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+          (add-hook 'text-mode-hook #'rainbow-delimiters-mode)
+          (add-hook 'conf-mode-hook #'rainbow-delimiters-mode))
+#+END_SRC
+
+** Treemacs
+#+begin_src emacs-lisp
+    (use-package treemacs
+      :ensure t
+      :defer t
+      :init
+      (with-eval-after-load 'winum
+        (define-key winum-keymap (kbd "M-0") #'treemacs-select-window)))
+      
+
+      (use-package treemacs-projectile
+        :after (treemacs projectile)
+        :ensure t)
+#+end_src
+
+* Org mode
+
+#+BEGIN_SRC emacs-lisp
+            (require 'org-tempo)
+
+          (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+          (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+          (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+          (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+          (add-to-list 'org-structure-template-alist '("py" . "src python"))
+          (add-to-list 'org-structure-template-alist '("go" . "src go"))
+          (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+          (add-to-list 'org-structure-template-alist '("json" . "src json"))
+
+              (use-package org
+        :hook ((org-mode . visual-line-mode)
+               (org-mode . org-indent-mode)))
+
+      (use-package org-bullets :hook (org-mode . org-bullets-mode))
+
+    (setq org-ellipsis "⤵")
+  (setq org-hide-leading-stars t)
+(setq org-src-fontify-natively t)
+#+END_SRC
+
+* Programming
+** .editorconfig
+#+begin_src emacs-lisp
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+#+end_src
+
+** Company 
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :hook (prog-mode . company-mode)
+    :config
+    (setq company-idle-delay 0)
+    (setq company-dabbrev-downcase 0)
+    (setq company-minimum-prefix-length 1)
+    (setq company-tooltip-align-annotations t))
+
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (define-key company-active-map (kbd "SPC") #'company-abort))
+#+END_SRC
+
+** Yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :config
+      (use-package yasnippet-snippets)
+      (yas-reload-all))
+#+END_SRC
+
+** LSP
+#+BEGIN_SRC emacs-lisp
+    (use-package lsp-mode
+      :ensure t
+      :hook ((prog-mode) . lsp)
+      :bind (:map lsp-mode-map
+       ("TAB" . completion-at-point)))
+
+(add-hook 'prog-mode-hook #'lsp)
+
+    (use-package lsp-ui
+      :after lsp-mode
+      :hook (lsp-mode . lsp-ui-mode)
+      :config
+      (setq lsp-ui-sideline-enable t)
+      (setq lsp-ui-sideline-show-hover nil)
+      (setq lsp-ui-doc-position 'bottom)
+      (lsp-ui-doc-show))
+
+    (use-package dap-mode
+    :after lsp-ui
+      :config
+      (use-package dap-ui
+        :ensure nil
+        :config
+        (dap-ui-mode 1))
+      (dap-tooltip-mode 1))
+    (require 'dap-firefox)
+    (require 'dap-chrome)
+    (require 'dap-node)
+
+
+    (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+
+  ;(use-package lsp-treemacs)
+#+END_SRC
+
+** Projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :init (projectile-mode 1)
+    :config
+    (setq projectile-completion-system 'ivy)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+  (global-set-key (kbd "<f5>") 'projectile-compile-project)
+
+  (use-package counsel-projectile
+    :bind
+    ("C-x v" . counsel-projectile)
+    ("C-x c p" . counsel-projectile-ag)
+    :config
+    (counsel-projectile-mode))
+#+END_SRC
+
+** Semantic
+#+BEGIN_SRC emacs-lisp
+  (use-package semantic
+    :config
+    (global-semanticdb-minor-mode 1)
+    (global-semantic-idle-scheduler-mode 1)
+    (global-semantic-stickyfunc-mode 1)
+    (semantic-mode 1))
+#+END_SRC
+
+** C/C++
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default c-basic-offset 4)
+
+  (with-eval-after-load 'company
+    (add-hook 'c++-mode-hook 'company-mode)
+    (add-hook 'c-mode-hook 'company-mode))
+
+  (use-package company-c-headers)
+
+  (use-package irony
+    :config
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  (add-hook 'c++-mode-hook 'yas-minor-mode)
+  (add-hook 'c-mode-hook 'yas-minor-mode)
+
+  (use-package flycheck-clang-analyzer
+    :config
+    (with-eval-after-load 'flycheck
+      (require 'flycheck-clang-analyzer)
+      (flycheck-clang-analyzer-setup)))
+#+END_SRC
+
+** Python
+
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'company
+    (add-hook 'python-mode-hook 'company-mode))
+
+
+  (add-hook 'python-mode-hook 'yas-minor-mode)
+
+  (add-hook 'python-mode-hook 'flycheck-mode)
+#+END_SRC
+
+** ELisp
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+
+ ; (use-package slime
+;    :config
+ ;   (setq inferior-lisp-program "/usr/bin/sbcl")
+  ;  (setq slime-contribs '(slime-fancy)))
+
+;  (use-package slime-company
+;    :init
+;    (require 'company)
+;    (slime-setup '(slime-fancy slime-company)))
+
+  (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
+
+  (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+#+END_SRC
+
+** Lua
+
+#+BEGIN_SRC emacs-lisp
+  (defun lua-mode-company-init ()
+    (setq-local company-backends '((company-lua
+                                    company-etags
+                                    company-dabbrev-code))))
+
+  ;(use-package company-lua
+    ;:config
+    ;(setq lua-indent-level 4)
+    ;(setq lua-indent-string-contents t)
+    ;(add-hook 'lua-mode-hook #'lua-mode-company-init))
+
+  (add-hook 'lua-mode-hook 'yas-minor-mode)
+
+  (add-hook 'lua-mode-hook 'flycheck-mode)
+#+END_SRC
+
+** Bash
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'shell-mode-hook 'company-mode)
+
+  (defun shell-mode-company-init ()
+    (setq-local company-backends '((company-shell
+                                    company-shell-env
+                                    company-etags
+                                    company-dabbrev-code))))
+
+  (use-package company-shell
+    :config
+    (require 'company)
+    (add-hook 'shell-mode-hook 'shell-mode-company-init))
+
+  (add-hook 'shell-mode-hook 'yas-minor-mode)
+
+  (add-hook 'shell-mode-hook 'flycheck-mode)
+#+END_SRC
+
+** Build systems
+
+#+BEGIN_SRC emacs-lisp
+  (use-package meson-mode
+    :init (add-hook 'meson-mode-hook 'company-mode))
+#+END_SRC
+
+** Ansible
+
+#+BEGIN_SRC emacs-lisp
+  (use-package yaml-mode
+    :init (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+
+  (use-package flycheck-yamllint
+    :init
+    (progn
+      (eval-after-load 'flycheck
+        '(add-hook 'flycheck-mode-hook 'flycheck-yamllint-setup))))
+
+  (use-package ansible
+    :init (add-hook 'yaml-mode-hook '(lambda () (ansible 1))))
+#+END_SRC
+
+** Rust
+
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode
+  :hook (rust-mode . lsp))
+
+;; Add keybindings for interacting with Cargo
+(use-package cargo
+  :hook (rust-mode . cargo-minor-mode))
+
+(use-package flycheck-rust
+  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+  (add-hook 'rust-mode-hook 'yas-minor-mode)
+#+END_SRC
+
+** TOML
+
+#+BEGIN_SRC emacs-lisp
+(use-package toml-mode)
+#+END_SRC
+
+** VHDL
+#+BEGIN_SRC emacs-lisp
+(use-package  vhdl-mode)
+
+(add-hook 'vhdl-mode-hook 'yas-minor-mode)
+#+END_SRC
+
+** Web
+#+begin_src emacs-lisp
+       (use-package web-mode
+         :mode ("\\.html?\\'"
+                "\\.php\\'"
+                "\\.svelte\\'"
+                "\\.jsx\\'"
+                ))
+
+       (use-package css-mode
+         :mode "\\.css\\'")
+
+       (use-package emmet-mode
+         :delight
+         :bind ((:map emmet-mode-keymap
+                      ("M-e" . emmet-expand-line)))
+         :hook (css-mode sgml-mode web-mode vue-mode))
+
+       (use-package add-node-modules-path)
+
+;;       (use-package prettier-js)
+
+
+   ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
+
+    ;;(add-hook 'web-mode
+      ;; (lambda ()
+        ;; (add-hook 'before-save-hook 'prettier-js nil)))
+
+  (use-package nvm
+    :defer t)
+
+
+;(use-package typescript-mode
+;  :mode "\\.ts\\'")
+#+end_src
+
+** Vue
+#+begin_src emacs-lisp
+(use-package vue-mode
+  :mode "\\.vue\\'"
+  :hook ((vue-mode . prettier-js-mode))
+  :config
+  (add-hook 'vue-mode-hook #'lsp)
+  (setq prettier-js-args '("--parser vue")))
+
+  (add-hook 'vue-mode-hook
+            (lambda ()
+              (emmet-mode +1)
+              (subword-mode +1)
+              (smartparens-mode -1)))
+
+(add-hook 'mmm-major-mode-hook
+          (lambda ()
+            (set-face-background 'mmm-default-submode-face nil)))
+#+end_src
+
+* Git
+** EDiff
+#+BEGIN_SRC emacs-lisp
+  (use-package ediff
+    :config
+    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+    (setq-default ediff-highlight-all-diffs 'nil)
+    (setq ediff-diff-options "-w"))
+#+END_SRC
+
+** Magit
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :config
+    (setq magit-push-always-verify nil)
+    (setq git-commit-summary-max-length 50)
+    (setq magit-completing-read-function 'ivy-completing-read)
+    :bind
+    ("C-x g s" . magit-status)
+    ("C-x g x" . magit-checkout)
+    ("C-x g c" . magit-commit)
+    ("C-x g p" . magit-push)
+    ("C-x g u" . magit-pull)
+    ("C-x g e" . magit-ediff-resolve)
+    ("C-x g r" . magit-rebase-interactive))
+
+  (use-package magit-popup)
+#+END_SRC
+
