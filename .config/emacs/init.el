@@ -1,5 +1,4 @@
 ;;; init.el --- Summary
-;;;
 ;;; Commentary:
 ;;; Uncle Dave's
 ;;; This fixed garbage collection, makes Emacs start up faster ;;;;;;;
@@ -20,20 +19,22 @@
 
 ;;; Package
 (require 'package)
-(setq package-enable-at-startup nil)
-
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;;; Bootstrapping use-package
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
   (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 

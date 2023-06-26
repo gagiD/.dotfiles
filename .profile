@@ -1,9 +1,11 @@
 #!/bin/sh
 # Profile file. Runs on login.
 
-export PATH="${PATH}:/home/gagi/bin:/home/gagi/.gem/ruby/2.7.0/bin:/usr/lib/jvm/default/bin:/home/gagi/.yarn/bin"
+export PATH="${PATH}:/home/gagi/bin:/home/gagi/.gem/ruby/2.7.0/bin:/usr/lib/jvm/default/bin:/home/gagi/.yarn/bin:/home/gagi/.local/bin"
 
-export EDITOR="kate"
+alias emacs="emacs -mm"
+
+export EDITOR="emacs -nw"
 export TERMINAL="konsole"
 export BROWSER="firefox"
 export READER="zathura"
