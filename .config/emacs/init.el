@@ -3,6 +3,11 @@
 ;;; Uncle Dave's
 ;;; This fixed garbage collection, makes Emacs start up faster ;;;;;;;
 ;;; Code:
+
+(setq frame-resize-pixelwise t)
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
@@ -19,7 +24,8 @@
 
 ;;; Package
 (require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+(setq package-archives '(("nongnu" . "https://elpa.nongnu.org/nongnu/")
+			 ("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
 

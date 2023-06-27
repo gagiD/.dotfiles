@@ -3,8 +3,6 @@
 
 export PATH="${PATH}:/home/gagi/bin:/home/gagi/.gem/ruby/2.7.0/bin:/usr/lib/jvm/default/bin:/home/gagi/.yarn/bin:/home/gagi/.local/bin"
 
-alias emacs="emacs -mm"
-
 export EDITOR="emacs -nw"
 export TERMINAL="konsole"
 export BROWSER="firefox"
@@ -33,11 +31,10 @@ alias r='ranger'
 
 alias e='emacs -nw'
 
-alias dotfiles='/usr/bin/git --git-dir=/home/gagi/.dotfiles/ --work-tree=/home/gagi'
-
 alias c='clear'
 alias g='git'
 alias gs='git status'
+alias gw='git show'
 alias ga='git add'
 alias gaa='git add *'
 alias gc='git commit'
@@ -47,6 +44,7 @@ alias gpo='git push origin'
 alias gpp='git pull'
 alias gr='git rebase'
 alias grc='git rebase --continue'
+alias gl='git log'
 
 alias sc='systemctl'
 alias scs='systemctl start'
@@ -73,7 +71,6 @@ export MY_CACHE_HOME="$HOME/.cache"
 export MY_DATA_HOME="$HOME/.local/share"
 export MY_STATE_HOME="$HOME/.local/state"
 
-
 export NVM_DIR="$MY_DATA_HOME"/nvm
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
@@ -96,4 +93,3 @@ export NODE_REPL_HISTORY="$MY_DATA_HOME"/node_repl_history
 export PYENV_ROOT="$MY_DATA_HOME"/pyenv
 export RUSTUP_HOME="$MY_DATA_HOME"/rustup
 export WORKON_HOME="$MY_DATA_HOME"/virtualenvs
-
