@@ -7,3 +7,7 @@
 	editor = emacs -nw
 [merge]
 	tool = meld
+[rerere]
+	enabled = 1
+[cola]
+	startupmode = folder

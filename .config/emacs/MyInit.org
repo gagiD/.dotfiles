@@ -6,6 +6,7 @@
 
 * Better defaults
 #+begin_src emacs-lisp
+  (setq native-comp-async-report-warnings-errors 'silent) ; some bullshit who even knows
     (fset 'yes-or-no-p 'y-or-n-p) ; simpler
 
     (delete-selection-mode t) ; delete selection
@@ -208,6 +209,7 @@ Saves to a temp file and puts the filename in the kill ring."
 #+begin_src emacs-lisp
   (prefer-coding-system 'utf-8-unix)
   (delete-selection-mode 1)
+   (global-subword-mode 1)
 
   (setq god-mode-enable-function-key-translation nil)
   (use-package god-mode
@@ -230,6 +232,11 @@ Saves to a temp file and puts the filename in the kill ring."
   (use-package yasnippet-snippets)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
 
+  (use-package exec-path-from-shell)
+  (add-to-list `exec-path "~/.local/share/nvm/versions/node/v18.12.0/bin/")
+  (use-package direnv
+    :config
+    (direnv-mode))
   (use-package format-all)
 
   (add-hook 'prog-mode-hook #'format-all-ensure-formatter)
@@ -241,6 +248,7 @@ Saves to a temp file and puts the filename in the kill ring."
     :init
     (setq ws-butler-convert-leading-tabs-or-spaces t))
 #+end_src
+
 * Keybinds
 #+begin_src emacs-lisp
 (use-package hydra)
@@ -437,6 +445,7 @@ Saves to a temp file and puts the filename in the kill ring."
 	   "\\.svelte\\'"
 	   "\\.jsx\\'"
 	   "\\.vue\\'"
+	   "\\.tsx\\'"
 	   ))
 
   (use-package elm-mode)
@@ -457,9 +466,7 @@ Saves to a temp file and puts the filename in the kill ring."
 
 ** C#
 #+begin_src emacs-lisp
-(use-package csharp-mode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-tree-sitter-mode)))
+  (add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-tree-sitter-mode))
 #+end_src
 
 ** Docker

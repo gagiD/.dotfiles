@@ -93,3 +93,9 @@ export NODE_REPL_HISTORY="$MY_DATA_HOME"/node_repl_history
 export PYENV_ROOT="$MY_DATA_HOME"/pyenv
 export RUSTUP_HOME="$MY_DATA_HOME"/rustup
 export WORKON_HOME="$MY_DATA_HOME"/virtualenvs
+
+export CAPACITOR_ANDROID_STUDIO_PATH=/opt/android-studio/bin/
+
+export ANDROID_HOME=~/Android/Sdk
+export ANDROID_SDK_ROOT=~/Android/Sdk
+export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
