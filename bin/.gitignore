@@ -1,0 +1,12 @@
+# ignore everything
+*
+
+# add one by one
+!cp2ql
+!dcSound
+!flat-andoid-studio
+!imgur
+!lmc
+!neondocker
+!resetCursor
+!v2gif

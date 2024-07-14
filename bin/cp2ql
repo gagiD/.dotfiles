@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sed -n '1,2p' ~/Vaults/quote/quote | wl-copy
