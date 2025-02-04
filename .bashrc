@@ -1,7 +1,6 @@
-
 source ~/.profile
-source /usr/share/nvm/init-nvm.sh
 
+HISTIGNORE=' *:&:?:??:clear:history:exit:cd*:ls*:[ \t]*'
 
 # fzf
 source /usr/share/fzf/key-bindings.bash

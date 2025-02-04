@@ -18,6 +18,7 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 
+
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 
@@ -35,6 +36,7 @@ source ~/.profile
 # history
 HISTSIZE=5000
 HISTFILE=~/.local/state/shell_history
+HISTORY_IGNORE='(?|??|c|clear|history|exit|cd*|ls*)'
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
 setopt appendhistory
@@ -47,7 +49,8 @@ setopt hist_find_no_dups
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' menu select
 
 # fzf
 eval "$(fzf --zsh)"

@@ -39,19 +39,49 @@ alias r='ranger'
 alias e='emacs -nw'
 
 alias c='clear'
+
 alias g='git'
 alias gs='git status'
-alias gw='git show'
+alias gsh='git show'
 alias ga='git add'
 alias gaa='git add *'
 alias gc='git commit'
 alias gcm='git commit -m'
+alias gcam='git commit --amend'
 alias gp='git push'
 alias gpo='git push origin'
 alias gpp='git pull'
+alias gppr='git pull --rebase'
 alias gr='git rebase'
 alias grc='git rebase --continue'
+alias gra='git rebase --abort'
+alias gb='git branch'
+alias gba='git branch --all'
+alias gbd='git branch --delete'
+alias gbD='git branch --delete --force'
+alias gbr='git branch --remote'
+alias gco='git checkout'
+alias gcb='git checkout -b'
+alias gcB='git checkout -B'
+alias gwt='git worktree'
+alias gwta='git worktree add'
+alias gwtl='git worktree list'
+alias gwtr='git worktree remove'
 alias gl='git log'
+alias gf='git fetch'
+alias gfa='git fetch --all'
+alias gbs='git bisect'
+alias gbsb='git bisect bad'
+alias gbsg='git bisect good'
+alias gbsn='git bisect new'
+alias gbso='git bisect old'
+alias gbsr='git bisect reset'
+alias gbss='git bisect start'
+alias gd='git diff'
+alias gcf='git config --list'
+alias gdct='git describe --tags $(git rev-list --tags --max-count=1)'
+alias gwch='git whatchanged -p --abbrev-commit --pretty=medium'
+
 
 alias nipl='npm install --package-lock-only'
 
@@ -70,11 +100,10 @@ alias .....='cd ../../../../'
 
 alias ports='netstat -tulanp'
 
+alias rmf='rm -rf'
+
 # stupid but required
 alias sudo='sudo '
-
-# surely this works
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 export MY_CONFIG_HOME="$HOME/.config"
 export MY_CACHE_HOME="$HOME/.cache"
@@ -82,7 +111,7 @@ export MY_DATA_HOME="$HOME/.local/share"
 export MY_STATE_HOME="$HOME/.local/state"
 
 export NVM_DIR="$MY_DATA_HOME"/nvm
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+source /usr/share/nvm/init-nvm.sh
 
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
@@ -104,11 +133,18 @@ export PYENV_ROOT="$MY_DATA_HOME"/pyenv
 export RUSTUP_HOME="$MY_DATA_HOME"/rustup
 export WORKON_HOME="$MY_DATA_HOME"/virtualenvs
 
-export CAPACITOR_ANDROID_STUDIO_PATH=/opt/android-studio/bin/
 
+export CAPACITOR_ANDROID_STUDIO_PATH=/opt/android-studio/bin/studio.sh
 export ANDROID_HOME=~/Android/Sdk
 export ANDROID_SDK_ROOT=~/Android/Sdk
-export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
+export PATH=$PATH:$ANDROID_SDK_ROOT/tools
+export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin           # avdmanager, sdkmanager
+export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools      # adb, logcat
+export PATH=$PATH:$ANDROID_SDK_ROOT/emulator            # emulator
+export PATH=$PATH:$ANDROID_SDK_ROOT/build-tools         # apksigner, zipalign
+
+# surely this works
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
@@ -124,3 +160,4 @@ alias snvim='~/.local/share/bob/v0.10.0/nvim-linux64/bin/nvim'
 function gi() {
   curl -sL https://www.toptal.com/developers/gitignore/api/$@;
 }
+
